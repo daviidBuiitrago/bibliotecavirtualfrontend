@@ -1,0 +1,40 @@
+<h1>Lista de libros</h1>
+<div class="text-end">  <button class="btn btn-primary" routerLink="/nuevo">
+        Nuevo libro
+    </button>
+</div>
+
+<table class="table table-hover mt-5">
+    <thead>
+        <tr>
+            <th>Libro</th>
+            <th>PRECIO</th>
+            <th>F. CREACION</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let libro of libros">
+            <td>
+                <div class="fw-bold">
+                    {{libro.titulo}}
+                </div>
+                <p>
+                    {{libro.descripcion}}
+                </p>
+            </td>
+            <td>
+                {{libro.precio|currency:'USD':'code'}}
+            </td>
+            <td>
+                {{libro.fechaCreacion|date:'yyyy-MM-dd hh:mm a'}}
+            </td>
+            <td><a href="#" [routerLink]="[libro.idLibro]">
+                    Editar
+                </a> <a href="#" class="ms-2" (click)="delete(libro)">
+                    Eliminar
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
