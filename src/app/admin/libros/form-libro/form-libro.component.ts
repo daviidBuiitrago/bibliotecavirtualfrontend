@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Libro } from '../shared/libro.model';
 import { LibroService } from '../shared/_service/libro.service';
 
 @Component({
@@ -12,6 +13,7 @@ import { LibroService } from '../shared/_service/libro.service';
 export class FormLibroComponent implements OnInit {
   formulario?: FormGroup;
   errors?: any;
+  libro?: Libro;
 
   constructor(
     private libroService: LibroService,
@@ -27,6 +29,7 @@ export class FormLibroComponent implements OnInit {
     if (id) {
       this.libroService.get(parseInt(id!))
         .subscribe(libro => {
+          this.libro = libro;
           this.formulario = this.formBuilder.group({
             titulo: [libro.titulo, [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
             slug: [libro.slug, [Validators.required, Validators.pattern('[a-z0-9-]+')]],
@@ -52,10 +55,18 @@ export class FormLibroComponent implements OnInit {
     const values = this.formulario?.value;
     values['rutaArchivo'] = 'abc.pdf';
     values['rutaPortada'] = 'abc.jpg';
-    this.libroService.create(values)
+    let request;
+
+    if (this.libro) {
+      request = this.libroService.update(this.libro.idLibro, values);
+    } else {
+      request = this.libroService.create(values);
+
+    }
+    request
       .subscribe({
         next: libro => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/admin/libros']);
         },
         error: err => {
           console.log('Errores de validación', err.error.errors);
@@ -67,6 +78,18 @@ export class FormLibroComponent implements OnInit {
 
   controlHasError(control: string, error: string): boolean {
     return this.formulario?.controls[control].hasError(error) == true;
+  }
+
+  buildSlug() {
+    const slug =this.formulario?.controls['titulo'].value
+      .toLowerCase()
+      .replace(/\s+/g, '-')     // Replace spaces with
+      .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+      .replace(/\-\-+/g, '-')  // Replace mutiple -with single -
+      .replace(/^-+/, '')      // Trim - from start of text 
+      .replace(/-+$/, '');     // Trim - from end of text 
+
+      this.formulario?.controls['slug'].setValue(slug);
   }
 
 }

@@ -1,21 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ListaLibrosComponent } from './libros/lista-libros/lista-libros.component';
-import { FormLibroComponent } from './libros/form-libro/form-libro.component';
 
 const routes: Routes = [
-{
-  path:'',
-  component:ListaLibrosComponent
-},
-{
-  path:'nuevo',
-  component:FormLibroComponent
-},
-{
-  path:':id',
-  component:FormLibroComponent
-}
+  {
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+  }
 
 ];
 

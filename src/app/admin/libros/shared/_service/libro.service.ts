@@ -15,7 +15,7 @@ export class LibroService {
     private http: HttpClient
   ) { }
 
-  getAll(page:number=0,size:number=5):Observable<LibroPage>{
+  getAll(page:number=0,size:number=10):Observable<LibroPage>{
     return this.http.get<LibroPage>(`${this.url}/pageable?size=${size}&number=${page}`,{});
 
   }
