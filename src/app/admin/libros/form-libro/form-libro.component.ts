@@ -81,6 +81,7 @@ export class FormLibroComponent implements OnInit {
   }
 
   buildSlug() {
+    
     const slug =this.formulario?.controls['titulo'].value
       .toLowerCase()
       .replace(/\s+/g, '-')     // Replace spaces with
